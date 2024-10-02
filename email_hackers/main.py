@@ -200,19 +200,26 @@ def main() -> NoReturn:
             "confirmed_list", help="Path to the confirmed list file")
         parser.add_argument(
             "accepted_list", help="Path to the accepted list file")
+        parser.add_argument(
+            "pending_list", help="Path to the pending list file"
+        )
         args: argparse.Namespace = parser.parse_args()
 
         confirmed_emails: Optional[List[str]] = read_email_list(
             args.confirmed_list)
         accepted_emails: Optional[List[str]] = read_email_list(
             args.accepted_list)
+        pending_emails: Optional[List[str]] = read_email_list(
+            args.pending_list
+        )
 
-        if confirmed_emails is None or accepted_emails is None:
+        if (confirmed_emails is None or accepted_emails is None
+                or pending_emails is None):
             write_log("ERROR", "Failed to read email lists. Exiting.")
             sys.exit(1)
 
         # Email content for confirmed list
-        confirmed_subject: str = "See you this Friday at KnightHacks!"
+        confirmed_subject: str = "See you this Friday at Knight Hacks!"
         confirmed_body: str = """
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><!--$-->
             <html dir="ltr" lang="en">
@@ -352,6 +359,59 @@ def main() -> NoReturn:
             </html><!--/$-->
         """
 
+        # Email content for pending/denied list
+        pending_subject: str = "Your Knight Hacks Status: Denied"
+        pending_body: str = """
+            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><!--$-->
+                <html dir="ltr" lang="en">
+
+                <head>
+                    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+                    <meta name="x-apple-disable-message-reformatting" />
+                </head>
+                <div style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">Update to your Knight Hacks Status: Denied<div> ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿</div>
+                </div>
+
+                <body style="background-color:rgb(246,249,252);background-image:url(&#x27;https://storage.googleapis.com/knighthacks-email/background%20(6).png&#x27;);background-size:cover;background-repeat:no-repeat;font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;;margin:0px;padding:0px">
+                    <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="margin-top:2rem;margin-bottom:2rem;margin-left:auto;margin-right:auto;width:600px;background-color:rgb(255,255,255);box-shadow:0 0 #0000, 0 0 #0000, 0 10px 15px -3px rgb(0,0,0,0.1), 0 4px 6px -4px rgb(0,0,0,0.1);padding-top:0px;padding-left:1.25rem;padding-right:1.25rem;padding-bottom:0px;position:relative;max-width:37.5em">
+                    <tbody>
+                        <tr style="width:100%">
+                        <td>
+                            <table cellPadding="0" cellSpacing="0" width="100%">
+                            <tr>
+                                <td align="center" style="padding-bottom:10px">
+                                <table cellPadding="0" cellSpacing="0">
+                                    <tr>
+                                    <td style="height:60px"></td>
+                                    </tr>
+                                    <tr>
+                                    <td align="center"><img alt="Knight Hacks Mascot" height="120" src="https://storage.googleapis.com/knighthacks-email/lenny%20(1).png" style="display:block;outline:none;border:none;text-decoration:none" width="120" /></td>
+                                    </tr>
+                                </table>
+                                </td>
+                            </tr>
+                            </table>
+                            <h1 style="font-size:2.25rem;line-height:1.25;font-weight:700;color:rgb(28,86,153);text-align:center;margin-top:2rem;padding-left:1rem;padding-right:1rem;margin-bottom:0.625rem">Your Knight Hacks Status: Denied</h1>
+                            <h1 style="font-size:1.5rem;line-height:1.25;font-weight:500;padding-left:1rem;padding-right:1rem;color:rgb(71,130,198);text-align:center;margin:0px;margin-bottom:1.25rem">If you&#x27;re seeing this email, unfortunately, our ship is full and we will not be able to accept you to Knight Hacks 2024.</h1>
+                            <p style="font-size:1.125rem;line-height:1.625;text-align:center;color:rgb(55,65,81);margin-bottom:1.5rem;margin:16px 0">This year, we received an overwhelming number of applications and we were unable to accept everyone. We appreciate your interest in Knight Hacks and hope you&#x27;ll consider applying again next year. This denial does not reflect on your abilities or potential, and we encourage you to continue pursuing your passion for technology.<br /> <br /></p>
+                            <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="background-color:rgb(28,86,153);padding:1.25rem;text-align:center">
+                            <tbody>
+                                <tr>
+                                <td>
+                                    <p class="my-1.25" style="font-size:0.875rem;line-height:1.25rem;color:rgb(255,255,255);margin:16px 0">Questions? Reach out to us at<!-- --> <a href="mailto:team@knighthacks.org" style="color:rgb(255,215,0);text-decoration-line:underline;text-decoration:none" target="_blank">hackteam@knighthacks.org</a></p>
+                                </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                        </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </body>
+
+                </html><!--/$-->
+        """
+
         # Send emails to confirmed list
         for email in confirmed_emails:
             if send_email(args.email, args.password, email,
@@ -370,6 +430,16 @@ def main() -> NoReturn:
             else:
                 write_log(
                     "WARNING", f"Failed to send acceptance email to {email}"
+                )
+
+        # Send emails to pending list
+        for email in pending_emails:
+            if send_email(args.email, args.password, email,
+                          pending_subject, pending_body):
+                write_log("INFO", f"Sent pending email to {email}")
+            else:
+                write_log(
+                    "WARNING", f"Failed to send pending email to {email}"
                 )
 
         write_log("INFO", "Email sending process completed")
